@@ -11,16 +11,14 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 
-let db;
-
-initDB().then(database => {
-  db = database;
+let dbPromise = initDB().then(database => {
   console.log('Database initialized');
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
   }
+  return database;
 }).catch(err => {
   console.error('Failed to initialize database', err);
 });
@@ -30,6 +28,7 @@ module.exports = app;
 // Settings Endpoints
 app.get('/api/settings', async (req, res) => {
   try {
+    const db = await dbPromise;
     const settings = await db.get('SELECT * FROM settings LIMIT 1');
     settings.rates = JSON.parse(settings.rates);
     res.json(settings);
@@ -41,6 +40,7 @@ app.get('/api/settings', async (req, res) => {
 app.post('/api/settings', async (req, res) => {
   const { companyName, address, contact, signatureText, footerNote, minKmPerDay, nightHaltStartDay, rates } = req.body;
   try {
+    const db = await dbPromise;
     await db.run(`
       UPDATE settings SET 
         companyName = ?, address = ?, contact = ?, 
@@ -58,6 +58,7 @@ app.post('/api/settings', async (req, res) => {
 // Records Endpoints
 app.get('/api/records', async (req, res) => {
   try {
+    const db = await dbPromise;
     const records = await db.all('SELECT * FROM records ORDER BY createdAt DESC');
     res.json(records);
   } catch (error) {
@@ -67,6 +68,7 @@ app.get('/api/records', async (req, res) => {
 
 app.get('/api/records/:id', async (req, res) => {
   try {
+    const db = await dbPromise;
     const record = await db.get('SELECT * FROM records WHERE id = ?', [req.params.id]);
     if (!record) return res.status(404).json({ error: 'Record not found' });
     const trips = await db.all('SELECT * FROM trips WHERE recordId = ?', [req.params.id]);
@@ -83,6 +85,7 @@ app.post('/api/records', async (req, res) => {
   } = req.body;
 
   try {
+    const db = await dbPromise;
     // Generate Bill Number if type is bill
     let billNumber = null;
     if (type === 'bill') {
@@ -124,6 +127,7 @@ app.post('/api/records', async (req, res) => {
 
 app.delete('/api/records/:id', async (req, res) => {
   try {
+    const db = await dbPromise;
     await db.run('DELETE FROM records WHERE id = ?', [req.params.id]);
     await db.run('DELETE FROM trips WHERE recordId = ?', [req.params.id]);
     res.json({ success: true });
