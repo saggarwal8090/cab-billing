@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+*.sqlite
+*.sqlite3
+dist/
+client/dist/
+api/database.sqlite
+.env
+.vercel
