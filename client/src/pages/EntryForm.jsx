@@ -45,7 +45,11 @@ const EntryForm = () => {
       const res = await axios.get('/api/settings');
       setSettings(res.data);
     } catch (err) {
-      console.error(err);
+      console.error('Failed to load settings:', err);
+      alert('Error connecting to the backend server. Please check Vercel Logs or refresh the page.');
+      // Set an empty/fallback settings object so the UI at least loads, or leave it as null to block.
+      // But we must at least show it failed.
+      setSettings({ rates: {}, minKmPerDay: 250, applyMinKm: false }); 
     }
   };
 
