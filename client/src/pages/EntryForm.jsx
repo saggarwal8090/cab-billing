@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Plus, Trash2, Calculator, Save, FileText, ClipboardList, AlertCircle } from 'lucide-react';
-import axios from 'axios';
+import { api as axios } from '../utils/api';
 import { calculateTripFare, calculateGrandTotal, getHaltRecommendation } from '../utils/calculations';
 
 const EntryForm = () => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, FileText, ClipboardList, Search, ArrowRight } from 'lucide-react';
-import axios from 'axios';
+import { api as axios } from '../utils/api';
 
 const Dashboard = () => {
   const [stats, setStats] = useState({ bills: 0, summaries: 0 });

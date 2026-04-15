@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Printer, Download, ArrowLeft, Mail, Phone, MapPin } from 'lucide-react';
-import axios from 'axios';
+import { api as axios } from '../utils/api';
 import html2pdf from 'html2pdf.js';
 
 const Preview = () => {

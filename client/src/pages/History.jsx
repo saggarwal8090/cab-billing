@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Filter, Printer, Trash2, Eye, Calendar, User, Car } from 'lucide-react';
-import axios from 'axios';
+import { api as axios } from '../utils/api';
 
 const History = () => {
   const [records, setRecords] = useState([]);

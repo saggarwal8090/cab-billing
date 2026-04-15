@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Plus, Trash2, Info } from 'lucide-react';
-import axios from 'axios';
+import { api as axios } from '../utils/api';
 
 const Settings = () => {
   const [settings, setSettings] = useState({

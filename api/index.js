@@ -21,6 +21,7 @@ let dbPromise = initDB().then(database => {
   return database;
 }).catch(err => {
   console.error('Failed to initialize database', err);
+  throw err;
 });
 
 module.exports = app;
@@ -29,6 +30,9 @@ module.exports = app;
 app.get('/api/settings', async (req, res) => {
   try {
     const db = await dbPromise;
+    if (!db) {
+       return res.status(500).json({ error: 'Database failed to initialize. Check server logs.' });
+    }
     const settings = await db.get('SELECT * FROM settings LIMIT 1');
     settings.rates = JSON.parse(settings.rates);
     res.json(settings);
