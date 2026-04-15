@@ -71,7 +71,7 @@ export const api = {
     if (url === '/api/records') {
       const nextId = db.records.length > 0 ? Math.max(...db.records.map(r => r.id)) + 1 : 1;
       const billNumber = payload.type === 'bill' 
-        ? \`PTC-\${new Date().getFullYear()}-\${String(nextId).padStart(4, '0')}\`
+        ? `PTC-${new Date().getFullYear()}-${String(nextId).padStart(4, '0')}`
         : null;
       
       const newRecord = {
