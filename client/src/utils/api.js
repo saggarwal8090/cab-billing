@@ -78,6 +78,7 @@ export const api = {
         ...payload,
         id: nextId,
         billNumber,
+        date: payload.date || new Date().toISOString().split('T')[0],
         createdAt: new Date().toISOString()
       };
       
