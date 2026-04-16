@@ -14,15 +14,37 @@ export const calculateTripFare = (trip, carRates, settings) => {
   const isHaltDay = trip.isHaltDay;
 
   const totalKm = Math.max(0, closingKm - openingKm);
-  
   let billableKm = totalKm;
-  const minKm = Number(settings.minKmPerDay) || 250;
-  
-   if (settings.applyMinKm && (trip.tripType === 'Outstation' || trip.tripType === 'Multi Day') && !isHaltDay) {
-    billableKm = Math.max(totalKm, minKm);
+  let baseFare = 0;
+
+  if (trip.tripType === 'Cancelled') {
+    // Special rule for cancellation
+    baseFare = 800;
+    billableKm = 0;
+  } else if (trip.tripType === 'Local') {
+    // Local: Dzire (80km/2000, 12/km extra), Innova (80km/2500, 16/km extra)
+    const isDzire = trip.carType?.toLowerCase().includes('dzire') || trip.carType?.toLowerCase().includes('sedan');
+    const isInnova = trip.carType?.toLowerCase().includes('innova');
+
+    if (isDzire) {
+      baseFare = 2000;
+      if (totalKm > 80) baseFare += (totalKm - 80) * 12;
+    } else if (isInnova) {
+      baseFare = 2500;
+      if (totalKm > 80) baseFare += (totalKm - 80) * 16;
+    } else {
+      // Fallback for other cars in local - use fixed rate or rate * km
+      baseFare = totalKm * rate;
+    }
+  } else {
+    // Outstation or Multi Day
+    const minKm = Number(settings.minKmPerDay) || 250;
+    if (settings.applyMinKm && !isHaltDay) {
+      billableKm = Math.max(totalKm, minKm);
+    }
+    baseFare = billableKm * rate;
   }
 
-  const baseFare = billableKm * rate;
   const tripTotal = baseFare + da + nightCharges + wholeNightCharges + toll + parking + extraCharges;
 
   return {
