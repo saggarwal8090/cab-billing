@@ -18,7 +18,7 @@ export const calculateTripFare = (trip, carRates, settings) => {
   let billableKm = totalKm;
   const minKm = Number(settings.minKmPerDay) || 250;
   
-  if (settings.applyMinKm && trip.tripType === 'Outstation' && !isHaltDay) {
+   if (settings.applyMinKm && (trip.tripType === 'Outstation' || trip.tripType === 'Multi Day') && !isHaltDay) {
     billableKm = Math.max(totalKm, minKm);
   }
 

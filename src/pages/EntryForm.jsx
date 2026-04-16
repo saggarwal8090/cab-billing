@@ -257,6 +257,7 @@ const EntryForm = () => {
                 <select value={trip.tripType} onChange={e => updateTrip(index, 'tripType', e.target.value)}>
                   <option value="Local">Local</option>
                   <option value="Outstation">Outstation</option>
+                  <option value="Multi Day">Multi Day Trip</option>
                 </select>
               </div>
             </div>
@@ -304,11 +305,13 @@ const EntryForm = () => {
                 <label>DA Charges</label>
                 <input type="number" value={trip.da} onChange={e => updateTrip(index, 'da', e.target.value)} />
               </div>
-              <div className="input-group">
-                <label>Night / Whole Night</label>
+               <div className="input-group">
+                <label>Night {trip.tripType === 'Multi Day' ? '/ Whole Night' : 'Halt'}</label>
                 <div style={{ display: 'flex', gap: '0.4rem' }}>
                    <input type="number" placeholder="Night" value={trip.nightCharges} onChange={e => updateTrip(index, 'nightCharges', e.target.value)} />
-                   <input type="number" placeholder="Whole" value={trip.wholeNightCharges} onChange={e => updateTrip(index, 'wholeNightCharges', e.target.value)} />
+                   {trip.tripType === 'Multi Day' && (
+                     <input type="number" placeholder="Whole Night" value={trip.wholeNightCharges} onChange={e => updateTrip(index, 'wholeNightCharges', e.target.value)} />
+                   )}
                 </div>
               </div>
               <div className="input-group">
