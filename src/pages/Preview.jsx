@@ -42,6 +42,7 @@ const Preview = () => {
   if (!record || !settings) return <div style={{ padding: '2rem' }}>Loading report...</div>;
 
   const isBill = record.type === 'bill';
+  const trips = record.trips || [];
 
   return (
     <div className="animate-fade">
@@ -88,7 +89,7 @@ const Preview = () => {
         ) : (
           <div style={{ textAlign: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', marginBottom: '1.5rem' }}>
             <h2 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Internal Trip Summary Report</h2>
-            <h3 style={{ fontSize: '1.1rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>Customer: {record.customerName}</h3>
+            <h3 style={{ fontSize: '1.1rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>Customer: {record.customerName || 'N/A'}</h3>
             <p style={{ color: 'var(--text-light)', fontSize: '0.9rem' }}>{settings.companyName} - Trip Records & Logistics</p>
           </div>
         )}
@@ -106,7 +107,7 @@ const Preview = () => {
               <p style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', marginBottom: '0.2rem' }}>Reference info</p>
               <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Bill No: {record.billNumber || `#${record.id}`}</h3>
               <p style={{ fontSize: '0.9rem' }}>Date: {record.date}</p>
-              <p style={{ fontSize: '0.9rem', marginTop: '0.5rem', fontWeight: '600' }}>Contact Person: {record.customerName}</p>
+              <p style={{ fontSize: '0.9rem', marginTop: '0.5rem', fontWeight: '600' }}>Contact Person: {record.customerName || 'N/A'}</p>
             </div>
           </div>
         </div>
@@ -131,10 +132,10 @@ const Preview = () => {
               </tr>
             </thead>
             <tbody>
-              {record.trips.map((trip, idx) => (
+              {trips.length > 0 ? trips.map((trip, idx) => (
                 <tr key={idx} style={{ borderBottom: '1px solid #e2e8f0' }}>
                   <td style={{ padding: '5px 2px', border: '1px solid #e2e8f0' }}>
-                    <div style={{ fontWeight: '600' }}>{trip.passengerName || record.customerName}</div>
+                    <div style={{ fontWeight: '600' }}>{trip.passengerName || record.customerName || 'N/A'}</div>
                     <div style={{ fontSize: '0.6rem', color: '#64748b' }}>{trip.tripDate}</div>
                   </td>
                   <td style={{ padding: '5px 2px', border: '1px solid #e2e8f0' }}>
@@ -142,21 +143,23 @@ const Preview = () => {
                   </td>
                   <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>{idx + 1}</td>
                   <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>
-                     {trip.billableKm}
-                     <div style={{ fontSize: '0.6rem', color: '#94a3b8' }}>({trip.openingKm}-{trip.closingKm})</div>
+                     {trip.billableKm || 0}
+                     <div style={{ fontSize: '0.6rem', color: '#94a3b8' }}>({trip.openingKm || 0}-{trip.closingKm || 0})</div>
                   </td>
-                  <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>{trip.rate}</td>
-                  <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0', fontWeight: '600' }}>{trip.baseFare}</td>
+                  <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>{trip.rate || 0}</td>
+                  <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0', fontWeight: '600' }}>{trip.baseFare || 0}</td>
                   <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>{trip.da || '-'}</td>
                   <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>{trip.parking || '-'}</td>
                   <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>{trip.nightCharges || '-'}</td>
                   <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>{trip.wholeNightCharges || '-'}</td>
                   <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>{trip.toll || '-'}</td>
                   <td style={{ padding: '5px 2px', textAlign: 'right', fontWeight: '700', border: '1px solid #e2e8f0', backgroundColor: '#f8fafc' }}>
-                    ₹{trip.tripTotal.toLocaleString()}
+                    ₹{(trip.tripTotal || 0).toLocaleString()}
                   </td>
                 </tr>
-              ))}
+              )) : (
+                <tr><td colSpan="12" style={{ textAlign: 'center', padding: '1rem' }}>No trips found</td></tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -166,40 +169,40 @@ const Preview = () => {
           <div style={{ width: '300px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)' }}>
               <span>Base Subtotal</span>
-              <span style={{ fontWeight: '600' }}>₹{record.subtotal.toLocaleString()}</span>
+              <span style={{ fontWeight: '600' }}>₹{(record.subtotal || 0).toLocaleString()}</span>
             </div>
 
-            {record.trips.reduce((acc, t) => acc + Number(t.da || 0), 0) > 0 && (
+            {trips.reduce((acc, t) => acc + Number(t.da || 0), 0) > 0 && (
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)', fontSize: '0.9rem', color: 'var(--text-light)' }}>
                 <span>Total DA Charges</span>
-                <span>₹{record.trips.reduce((acc, t) => acc + Number(t.da || 0), 0)}</span>
+                <span>₹{trips.reduce((acc, t) => acc + Number(t.da || 0), 0)}</span>
               </div>
             )}
             
-            {(record.trips.reduce((acc, t) => acc + Number(t.nightCharges || 0) + Number(t.wholeNightCharges || 0), 0)) > 0 && (
+            {(trips.reduce((acc, t) => acc + Number(t.nightCharges || 0) + Number(t.wholeNightCharges || 0), 0)) > 0 && (
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)', fontSize: '0.9rem', color: 'var(--text-light)' }}>
                 <span>Night Halt Charges</span>
-                <span>₹{record.trips.reduce((acc, t) => acc + Number(t.nightCharges || 0) + Number(t.wholeNightCharges || 0), 0)}</span>
+                <span>₹{trips.reduce((acc, t) => acc + Number(t.nightCharges || 0) + Number(t.wholeNightCharges || 0), 0)}</span>
               </div>
             )}
 
-            {record.trips.reduce((acc, t) => acc + Number(t.toll || 0) + Number(t.parking || 0), 0) > 0 && (
+            {trips.reduce((acc, t) => acc + Number(t.toll || 0) + Number(t.parking || 0), 0) > 0 && (
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)', fontSize: '0.9rem', color: 'var(--text-light)' }}>
                 <span>Toll & Parking</span>
-                <span>₹{record.trips.reduce((acc, t) => acc + Number(t.toll || 0) + Number(t.parking || 0), 0)}</span>
+                <span>₹{trips.reduce((acc, t) => acc + Number(t.toll || 0) + Number(t.parking || 0), 0)}</span>
               </div>
             )}
 
-            {record.trips.reduce((acc, t) => acc + Number(t.extraCharges || 0), 0) > 0 && (
+            {trips.reduce((acc, t) => acc + Number(t.extraCharges || 0), 0) > 0 && (
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)', fontSize: '0.9rem', color: 'var(--text-light)' }}>
                 <span>Other Extra Charges</span>
-                <span>₹{record.trips.reduce((acc, t) => acc + Number(t.extraCharges || 0), 0)}</span>
+                <span>₹{trips.reduce((acc, t) => acc + Number(t.extraCharges || 0), 0)}</span>
               </div>
             )}
 
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem 0', fontSize: '1.25rem', fontWeight: '800', color: 'var(--primary)' }}>
               <span>Grand Total</span>
-              <span>₹{record.grandTotal.toLocaleString()}</span>
+              <span>₹{(record.grandTotal || 0).toLocaleString()}</span>
             </div>
           </div>
         </div>
