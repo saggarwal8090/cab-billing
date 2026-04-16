@@ -89,7 +89,6 @@ const Preview = () => {
         ) : (
           <div style={{ textAlign: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', marginBottom: '1.5rem' }}>
             <h2 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Internal Trip Summary Report</h2>
-            <h3 style={{ fontSize: '1.1rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>Customer: {record.customerName || 'N/A'}</h3>
             <p style={{ color: 'var(--text-light)', fontSize: '0.9rem' }}>{settings.companyName} - Trip Records & Logistics</p>
           </div>
         )}

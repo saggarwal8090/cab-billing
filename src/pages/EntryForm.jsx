@@ -305,8 +305,11 @@ const EntryForm = () => {
                 <input type="number" value={trip.da} onChange={e => updateTrip(index, 'da', e.target.value)} />
               </div>
               <div className="input-group">
-                <label>Night Charges</label>
-                <input type="number" value={trip.nightCharges} onChange={e => updateTrip(index, 'nightCharges', e.target.value)} />
+                <label>Night / Whole Night</label>
+                <div style={{ display: 'flex', gap: '0.4rem' }}>
+                   <input type="number" placeholder="Night" value={trip.nightCharges} onChange={e => updateTrip(index, 'nightCharges', e.target.value)} />
+                   <input type="number" placeholder="Whole" value={trip.wholeNightCharges} onChange={e => updateTrip(index, 'wholeNightCharges', e.target.value)} />
+                </div>
               </div>
               <div className="input-group">
                 <label>Toll / Parking</label>
