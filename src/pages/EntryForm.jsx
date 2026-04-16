@@ -54,7 +54,22 @@ const EntryForm = () => {
   };
 
   const fetchRecord = async () => {
-    // Implementation for edit mode if needed
+    try {
+      const res = await axios.get(`/api/records/${id}`);
+      const data = res.data;
+      setFormData({
+        customerName: data.customerName,
+        clientCompany: data.clientCompany,
+        deptName: data.deptName,
+        date: data.date,
+        notes: data.notes,
+        applyMinKm: data.applyMinKm ?? true
+      });
+      setTrips(data.trips);
+    } catch (err) {
+      console.error('Failed to load record:', err);
+      alert('Error loading record for editing.');
+    }
   };
 
   useEffect(() => {
@@ -63,7 +78,6 @@ const EntryForm = () => {
       const results = calculateTripFare(trip, settings.rates, { ...settings, applyMinKm: formData.applyMinKm });
       return { ...trip, ...results };
     });
-    // We don't setTrips here to avoid loop, but we do set totals
     setTotals(calculateGrandTotal(updatedTrips));
   }, [trips, settings, formData.applyMinKm]);
 
@@ -133,13 +147,18 @@ const EntryForm = () => {
       trips
     };
 
-    console.log('SAVING PAYLOAD:', payload);
-
     try {
-      const res = await axios.post('/api/records', payload);
+      let res;
+      if (id) {
+        // Edit Mode
+        res = await axios.put(`/api/records/${id}`, payload);
+      } else {
+        // Create Mode
+        res = await axios.post('/api/records', payload);
+      }
       navigate(`/preview/${res.data.id}`);
     } catch (err) {
-      console.error('FETCH ERROR:', err.response?.data || err);
+      console.error('SAVE ERROR:', err.response?.data || err);
       alert(`Error saving record: ${err.response?.data?.error || err.message}`);
     }
   };

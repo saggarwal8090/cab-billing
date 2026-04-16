@@ -89,6 +89,28 @@ export const api = {
     
     throw { response: { data: { error: 'Route not found' } } };
   },
+
+  put: async (url, payload) => {
+    await delay(50);
+    const db = getDB();
+    
+    if (url.startsWith('/api/records/')) {
+      const id = parseInt(url.split('/').pop());
+      const index = db.records.findIndex(r => r.id === id);
+      if (index === -1) throw { response: { data: { error: 'Record not found' } } };
+      
+      db.records[index] = { 
+        ...db.records[index], 
+        ...payload, 
+        id, // Ensure ID doesn't change
+        updatedAt: new Date().toISOString() 
+      };
+      saveDB(db);
+      return { data: { success: true, id } };
+    }
+    
+    throw { response: { data: { error: 'Route not found' } } };
+  },
   
   delete: async (url) => {
     await delay(50);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Filter, Printer, Trash2, Eye, Calendar, User, Car } from 'lucide-react';
+import { Search, Filter, Printer, Trash2, Eye, Calendar, User, Car, Edit } from 'lucide-react';
 import { api as axios } from '../utils/api';
 
 const History = () => {
@@ -128,6 +128,9 @@ const History = () => {
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
                       <Link to={`/preview/${record.id}`} title="View/Print" style={{ color: 'var(--primary)' }}>
                         <Eye size={18} />
+                      </Link>
+                      <Link to={`/edit/${record.id}`} title="Edit" style={{ color: 'var(--secondary)' }}>
+                        <Edit size={18} />
                       </Link>
                       <button onClick={() => deleteRecord(record.id)} title="Delete" style={{ background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', padding: 0 }}>
                         <Trash2 size={18} />

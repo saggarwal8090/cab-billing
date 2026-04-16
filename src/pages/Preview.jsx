@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Printer, Download, ArrowLeft, Mail, Phone, MapPin } from 'lucide-react';
+import { Printer, Download, ArrowLeft, Mail, Phone, MapPin, Edit } from 'lucide-react';
 import { api as axios } from '../utils/api';
 import html2pdf from 'html2pdf.js';
 
@@ -50,6 +50,9 @@ const Preview = () => {
           <ArrowLeft size={18} /> Back
         </button>
         <div style={{ display: 'flex', gap: '1rem' }}>
+          <button onClick={() => navigate(`/edit/${id}`)} className="btn btn-secondary" style={{ backgroundColor: '#eff6ff', color: '#1e40af', borderColor: '#bfdbfe' }}>
+            <Edit size={18} /> Edit Bill
+          </button>
           <button onClick={handleDownload} className="btn btn-secondary" style={{ backgroundColor: '#dcfce7', color: '#166534' }}>
             <Download size={18} /> Download PDF
           </button>
@@ -59,87 +62,93 @@ const Preview = () => {
         </div>
       </div>
 
-      <div id="printable-area" className="card" style={{ padding: '3rem', maxWidth: '1000px', margin: '0 auto', minHeight: '11in' }}>
+      <div id="printable-area" className="card" style={{ padding: '1.5rem 2rem', maxWidth: '1000px', margin: '0 auto', minHeight: '11in' }}>
         {/* Header - Different for Bill vs Summary */}
         {isBill ? (
-          <div style={{ borderBottom: '3px solid var(--primary)', paddingBottom: '2rem', marginBottom: '2rem' }}>
+          <div style={{ borderBottom: '3px solid var(--primary)', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
-                <h1 style={{ color: 'var(--primary)', fontSize: '2.5rem', fontWeight: '800', marginBottom: '0.2rem' }}>{settings.companyName}</h1>
-                <p style={{ fontWeight: '600', fontSize: '1.1rem' }}>TRAVEL & CAB SERVICES</p>
-                <div style={{ marginTop: '1rem', color: 'var(--text-light)', fontSize: '0.9rem' }}>
-                  <p style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><MapPin size={14} /> {settings.address}</p>
-                  <p style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Phone size={14} /> {settings.contact}</p>
-                  {record.clientCompany && <p style={{ marginTop: '0.5rem', color: 'var(--text)' }}><strong>Client:</strong> {record.clientCompany} {record.deptName ? `(${record.deptName})` : ''}</p>}
+                <h1 style={{ color: 'var(--primary)', fontSize: '2rem', fontWeight: '800', marginBottom: '0.1rem' }}>{settings.companyName}</h1>
+                <p style={{ fontWeight: '600', fontSize: '1rem' }}>TRAVEL & CAB SERVICES</p>
+                <div style={{ marginTop: '0.5rem', color: 'var(--text-light)', fontSize: '0.85rem' }}>
+                  <p style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><MapPin size={12} /> {settings.address}</p>
+                  <p style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Phone size={12} /> {settings.contact}</p>
+                  {record.clientCompany && <p style={{ marginTop: '0.3rem', color: 'var(--text)' }}><strong>Client:</strong> {record.clientCompany} {record.deptName ? `(${record.deptName})` : ''}</p>}
                 </div>
               </div>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ display: 'inline-block', padding: '0.5rem 1rem', background: 'var(--primary)', color: 'white', borderRadius: '4px', marginBottom: '1rem' }}>
-                   <h3 style={{ margin: 0 }}>TAX INVOICE</h3>
+                <div style={{ display: 'inline-block', padding: '0.4rem 0.8rem', background: 'var(--primary)', color: 'white', borderRadius: '4px', marginBottom: '0.5rem' }}>
+                   <h3 style={{ margin: 0, fontSize: '1.1rem' }}>TAX INVOICE</h3>
                 </div>
-                <p style={{ fontSize: '0.9rem' }}><strong>Bill No:</strong> {record.billNumber}</p>
-                <p style={{ fontSize: '0.9rem' }}><strong>Date:</strong> {record.date}</p>
+                <p style={{ fontSize: '0.85rem' }}><strong>Bill No:</strong> {record.billNumber}</p>
+                <p style={{ fontSize: '0.85rem' }}><strong>Date:</strong> {record.date}</p>
               </div>
             </div>
           </div>
         ) : (
-          <div style={{ textAlign: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '1rem', marginBottom: '2rem' }}>
-            <h2 style={{ fontSize: '1.8rem', fontWeight: '700' }}>Internal Trip Summary Report</h2>
-            <p style={{ color: 'var(--text-light)' }}>{settings.companyName} - Trip Records & Logistics</p>
+          <div style={{ textAlign: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', marginBottom: '1.5rem' }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Internal Trip Summary Report</h2>
+            <h3 style={{ fontSize: '1.1rem', color: 'var(--primary)', marginBottom: '0.2rem' }}>Customer: {record.customerName}</h3>
+            <p style={{ color: 'var(--text-light)', fontSize: '0.9rem' }}>{settings.companyName} - Trip Records & Logistics</p>
           </div>
         )}
 
         {/* Customer & Vehicle Info */}
-        <div className="grid grid-2" style={{ marginBottom: '2.5rem', background: '#f8fafc', padding: '1.5rem', borderRadius: '8px' }}>
+        <div className="grid grid-2" style={{ marginBottom: '1.5rem', background: '#f8fafc', padding: '1rem', borderRadius: '8px' }}>
           <div>
-            <p style={{ color: 'var(--text-light)', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem' }}>Billed To / Customer</p>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: '700' }}>{record.customerName}</h3>
-            {record.clientCompany && <p style={{ fontSize: '1rem', fontWeight: '600' }}>{record.clientCompany}</p>}
-            {record.deptName && <p style={{ fontSize: '0.9rem' }}>Dept: {record.deptName}</p>}
+            <p style={{ color: 'var(--text-light)', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.2rem' }}>Billed To / Customer</p>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: '800' }}>{record.customerName}</h3>
+            {record.clientCompany && <p style={{ fontSize: '0.9rem', fontWeight: '600' }}>{record.clientCompany}</p>}
+            {record.deptName && <p style={{ fontSize: '0.85rem' }}>Dept: {record.deptName}</p>}
           </div>
           <div style={{ textAlign: 'right' }}>
-            <p style={{ color: 'var(--text-light)', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '0.4rem' }}>Reference</p>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: '700' }}>{record.billNumber || `#${record.id}`}</h3>
-            <p style={{ fontSize: '0.9rem', color: 'var(--text-light)' }}>{record.date}</p>
+            <p style={{ color: 'var(--text-light)', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.2rem' }}>Reference</p>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>{record.billNumber || `#${record.id}`}</h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>{record.date}</p>
           </div>
         </div>
 
         {/* Trip Table */}
-        <div style={{ marginBottom: '2.5rem' }}>
-          <table style={{ minWidth: '100%', marginBottom: '1rem' }}>
+        <div style={{ marginBottom: '1.5rem', overflowX: 'auto' }}>
+          <table className="compact-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.7rem' }}>
             <thead>
-              <tr style={{ borderBottom: '2px solid var(--text)' }}>
-                <th style={{ padding: '10px 5px', textAlign: 'left', background: 'none' }}>Passenger / Vehicle</th>
-                <th style={{ padding: '10px 5px', textAlign: 'left', background: 'none' }}>Path / Date</th>
-                <th style={{ padding: '10px 5px', textAlign: 'center', background: 'none' }}>Distance</th>
-                <th style={{ padding: '10px 5px', textAlign: 'center', background: 'none' }}>Rate</th>
-                <th style={{ padding: '10px 5px', textAlign: 'center', background: 'none' }}>Fare</th>
-                <th style={{ padding: '10px 5px', textAlign: 'center', background: 'none' }}>Misc</th>
-                <th style={{ padding: '10px 5px', textAlign: 'right', background: 'none' }}>Total</th>
+              <tr style={{ borderBottom: '2px solid #000', backgroundColor: '#f8fafc' }}>
+                <th style={{ padding: '4px 2px', textAlign: 'left', border: '1px solid #cbd5e1' }}>DOJ</th>
+                <th style={{ padding: '4px 2px', textAlign: 'left', border: '1px solid #cbd5e1' }}>Place</th>
+                <th style={{ padding: '4px 2px', textAlign: 'center', border: '1px solid #cbd5e1' }}>Invoice no</th>
+                <th style={{ padding: '4px 2px', textAlign: 'center', border: '1px solid #cbd5e1' }}>KM Run</th>
+                <th style={{ padding: '4px 2px', textAlign: 'center', border: '1px solid #cbd5e1' }}>Rs</th>
+                <th style={{ padding: '4px 2px', textAlign: 'center', border: '1px solid #cbd5e1' }}>Total</th>
+                <th style={{ padding: '4px 2px', textAlign: 'center', border: '1px solid #cbd5e1' }}>DA</th>
+                <th style={{ padding: '4px 2px', textAlign: 'center', border: '1px solid #cbd5e1' }}>Parking</th>
+                <th style={{ padding: '4px 2px', textAlign: 'center', border: '1px solid #cbd5e1' }}>night</th>
+                <th style={{ padding: '4px 2px', textAlign: 'center', border: '1px solid #cbd5e1' }}>whole night</th>
+                <th style={{ padding: '4px 2px', textAlign: 'center', border: '1px solid #cbd5e1' }}>toll</th>
+                <th style={{ padding: '4px 2px', textAlign: 'right', border: '1px solid #cbd5e1', backgroundColor: '#f1f5f9' }}>Total</th>
               </tr>
             </thead>
             <tbody>
               {record.trips.map((trip, idx) => (
-                <tr key={idx} style={{ borderBottom: '1px solid var(--border)' }}>
-                  <td style={{ padding: '15px 5px' }}>
-                    <div style={{ fontWeight: '700', fontSize: '0.9rem', color: 'var(--primary)' }}>{trip.passengerName || 'N/A'}</div>
-                    <div style={{ fontSize: '0.8rem', fontWeight: '600' }}>{trip.vehicleNumber}</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-light)' }}>{trip.carType} ({trip.tripType})</div>
+                <tr key={idx} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                  <td style={{ padding: '5px 2px', border: '1px solid #e2e8f0' }}>{trip.tripDate}</td>
+                  <td style={{ padding: '5px 2px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ fontWeight: '500' }}>{trip.fromLoc} - {trip.toLoc}</div>
                   </td>
-                  <td style={{ padding: '15px 5px' }}>
-                    <div style={{ fontWeight: '600', fontSize: '0.8rem' }}>{trip.tripDate}</div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--text-light)' }}>{trip.fromLoc} to {trip.toLoc}</div>
+                  <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>{idx + 1}</td>
+                  <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>
+                     {trip.billableKm}
+                     <div style={{ fontSize: '0.6rem', color: '#94a3b8' }}>({trip.openingKm}-{trip.closingKm})</div>
                   </td>
-                  <td style={{ padding: '15px 5px', textAlign: 'center' }}>
-                    <div style={{ fontWeight: '600' }}>{trip.billableKm} KM</div>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--text-light)' }}>({trip.openingKm}-{trip.closingKm})</div>
+                  <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>{trip.rate}</td>
+                  <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0', fontWeight: '600' }}>{trip.baseFare}</td>
+                  <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>{trip.da || '-'}</td>
+                  <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>{trip.parking || '-'}</td>
+                  <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>{trip.nightCharges || '-'}</td>
+                  <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>{trip.wholeNightCharges || '-'}</td>
+                  <td style={{ padding: '5px 2px', textAlign: 'center', border: '1px solid #e2e8f0' }}>{trip.toll || '-'}</td>
+                  <td style={{ padding: '5px 2px', textAlign: 'right', fontWeight: '700', border: '1px solid #e2e8f0', backgroundColor: '#f8fafc' }}>
+                    ₹{trip.tripTotal.toLocaleString()}
                   </td>
-                  <td style={{ padding: '15px 5px', textAlign: 'center' }}>₹{trip.rate}</td>
-                  <td style={{ padding: '15px 5px', textAlign: 'center' }}>₹{trip.baseFare}</td>
-                  <td style={{ padding: '15px 5px', textAlign: 'center' }}>
-                    ₹{trip.da + trip.nightCharges + trip.wholeNightCharges + trip.toll + trip.parking + trip.extraCharges}
-                  </td>
-                  <td style={{ padding: '15px 5px', textAlign: 'right', fontWeight: '700' }}>₹{trip.tripTotal}</td>
                 </tr>
               ))}
             </tbody>
