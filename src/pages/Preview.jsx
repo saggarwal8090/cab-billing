@@ -93,18 +93,21 @@ const Preview = () => {
           </div>
         )}
 
-        {/* Customer & Vehicle Info */}
-        <div className="grid grid-2" style={{ marginBottom: '1.5rem', background: '#f8fafc', padding: '1rem', borderRadius: '8px' }}>
-          <div>
-            <p style={{ color: 'var(--text-light)', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.2rem' }}>Billed To / Customer</p>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: '800' }}>{record.customerName}</h3>
-            {record.clientCompany && <p style={{ fontSize: '0.9rem', fontWeight: '600' }}>{record.clientCompany}</p>}
-            {record.deptName && <p style={{ fontSize: '0.85rem' }}>Dept: {record.deptName}</p>}
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            <p style={{ color: 'var(--text-light)', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.2rem' }}>Reference</p>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>{record.billNumber || `#${record.id}`}</h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>{record.date}</p>
+        {/* Customer & Vehicle Info Header */}
+        <div style={{ borderBottom: '2px solid #000', paddingBottom: '1rem', marginBottom: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+            <div>
+              <p style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', marginBottom: '0.2rem' }}>Department Detail</p>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--primary)', marginBottom: '0.3rem' }}>{record.deptName || 'N/A'}</h2>
+              <p style={{ fontSize: '0.95rem', fontWeight: '600' }}>Managed By: <span style={{ color: '#000' }}>{record.managedBy || 'N/A'}</span></p>
+              <p style={{ fontSize: '1.1rem', fontWeight: '700', marginTop: '0.5rem', color: '#1e293b' }}>{record.clientCompany || 'N/A'}</p>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <p style={{ fontSize: '0.8rem', color: '#64748b', textTransform: 'uppercase', marginBottom: '0.2rem' }}>Reference info</p>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: '700' }}>Bill No: {record.billNumber || `#${record.id}`}</h3>
+              <p style={{ fontSize: '0.9rem' }}>Date: {record.date}</p>
+              <p style={{ fontSize: '0.9rem', marginTop: '0.5rem', fontWeight: '600' }}>Contact Person: {record.customerName}</p>
+            </div>
           </div>
         </div>
 
@@ -113,7 +116,7 @@ const Preview = () => {
           <table className="compact-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.7rem' }}>
             <thead>
               <tr style={{ borderBottom: '2px solid #000', backgroundColor: '#f8fafc' }}>
-                <th style={{ padding: '4px 2px', textAlign: 'left', border: '1px solid #cbd5e1' }}>DOJ</th>
+                <th style={{ padding: '4px 2px', textAlign: 'left', border: '1px solid #cbd5e1' }}>Customer Name</th>
                 <th style={{ padding: '4px 2px', textAlign: 'left', border: '1px solid #cbd5e1' }}>Place</th>
                 <th style={{ padding: '4px 2px', textAlign: 'center', border: '1px solid #cbd5e1' }}>Invoice no</th>
                 <th style={{ padding: '4px 2px', textAlign: 'center', border: '1px solid #cbd5e1' }}>KM Run</th>
@@ -130,7 +133,10 @@ const Preview = () => {
             <tbody>
               {record.trips.map((trip, idx) => (
                 <tr key={idx} style={{ borderBottom: '1px solid #e2e8f0' }}>
-                  <td style={{ padding: '5px 2px', border: '1px solid #e2e8f0' }}>{trip.tripDate}</td>
+                  <td style={{ padding: '5px 2px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ fontWeight: '600' }}>{trip.passengerName || record.customerName}</div>
+                    <div style={{ fontSize: '0.6rem', color: '#64748b' }}>{trip.tripDate}</div>
+                  </td>
                   <td style={{ padding: '5px 2px', border: '1px solid #e2e8f0' }}>
                     <div style={{ fontWeight: '500' }}>{trip.fromLoc} - {trip.toLoc}</div>
                   </td>

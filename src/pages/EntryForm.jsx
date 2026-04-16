@@ -13,6 +13,7 @@ const EntryForm = () => {
     customerName: '',
     clientCompany: '',
     deptName: '',
+    managedBy: '',
     date: new Date().toISOString().split('T')[0],
     notes: '',
     applyMinKm: true
@@ -61,6 +62,7 @@ const EntryForm = () => {
         customerName: data.customerName,
         clientCompany: data.clientCompany,
         deptName: data.deptName,
+        managedBy: data.managedBy || '',
         date: data.date,
         notes: data.notes,
         applyMinKm: data.applyMinKm ?? true
@@ -195,6 +197,10 @@ const EntryForm = () => {
           <div className="input-group">
             <label>Department</label>
             <input type="text" value={formData.deptName} onChange={e => setFormData({...formData, deptName: e.target.value})} placeholder="e.g. Marketing" />
+          </div>
+          <div className="input-group">
+            <label>Managed By</label>
+            <input type="text" value={formData.managedBy} onChange={e => setFormData({...formData, managedBy: e.target.value})} placeholder="e.g. Manager Name" />
           </div>
           <div className="input-group">
             <label>Trip Start Date</label>
