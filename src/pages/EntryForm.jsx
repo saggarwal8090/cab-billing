@@ -312,36 +312,40 @@ const EntryForm = () => {
             </div>
 
             {trip.tripType !== 'Cancelled' && (
-              <div className="grid grid-3" style={{ gap: '1.5rem', marginTop: '1.5rem' }}>
-                <div className="input-group">
-                  <label>DA Charges (Per Day)</label>
-                  <input type="number" value={trip.da} onChange={e => updateTrip(index, 'da', e.target.value)} style={{ padding: '0.8rem', fontSize: '1.1rem', fontWeight: '600' }} />
-                </div>
-                 <div className="input-group">
-                  <label>Night {trip.tripType === 'Multi Day' ? '/ Whole Night' : 'Halt'} Charges</label>
-                  <div style={{ display: 'flex', gap: '0.75rem' }}>
-                     <input type="number" placeholder="Night Amt" value={trip.nightCharges} onChange={e => updateTrip(index, 'nightCharges', e.target.value)} style={{ padding: '0.8rem', fontSize: '1.1rem', fontWeight: '600' }} />
-                     {trip.tripType === 'Multi Day' && (
-                       <input type="number" placeholder="Whole Amt" value={trip.wholeNightCharges} onChange={e => updateTrip(index, 'wholeNightCharges', e.target.value)} style={{ padding: '0.8rem', fontSize: '1.1rem', fontWeight: '600' }} />
-                     )}
+              <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <div className="grid grid-4" style={{ gap: '1.5rem' }}>
+                  <div className="input-group">
+                    <label>DA Charges</label>
+                    <input type="number" value={trip.da} onChange={e => updateTrip(index, 'da', e.target.value)} style={{ padding: '0.8rem', fontSize: '1.1rem', fontWeight: '600' }} />
+                  </div>
+                  <div className="input-group">
+                    <label>Night Halt</label>
+                    <input type="number" placeholder="Night Amt" value={trip.nightCharges} onChange={e => updateTrip(index, 'nightCharges', e.target.value)} style={{ padding: '0.8rem', fontSize: '1.1rem', fontWeight: '600' }} />
+                  </div>
+                  {trip.tripType === 'Multi Day' && (
+                    <div className="input-group">
+                      <label>Whole Night</label>
+                      <input type="number" placeholder="Whole Night" value={trip.wholeNightCharges} onChange={e => updateTrip(index, 'wholeNightCharges', e.target.value)} style={{ padding: '0.8rem', fontSize: '1.1rem', fontWeight: '600' }} />
+                    </div>
+                  )}
+                  <div className="input-group">
+                    <label>Toll Fees</label>
+                    <input type="number" placeholder="Toll Amount" value={trip.toll} onChange={e => updateTrip(index, 'toll', e.target.value)} style={{ padding: '0.8rem', fontSize: '1.1rem', fontWeight: '600' }} />
+                  </div>
+                  <div className="input-group">
+                    <label>Parking Fees</label>
+                    <input type="number" placeholder="Parking Amount" value={trip.parking} onChange={e => updateTrip(index, 'parking', e.target.value)} style={{ padding: '0.8rem', fontSize: '1.1rem', fontWeight: '600' }} />
                   </div>
                 </div>
-                <div className="input-group">
-                  <label>Toll & Parking Fees</label>
-                  <div style={{ display: 'flex', gap: '0.75rem' }}>
-                     <input type="number" placeholder="Toll" value={trip.toll} onChange={e => updateTrip(index, 'toll', e.target.value)} style={{ padding: '0.8rem', fontSize: '1.1rem', fontWeight: '600' }} />
-                     <input type="number" placeholder="Parking" value={trip.parking} onChange={e => updateTrip(index, 'parking', e.target.value)} style={{ padding: '0.8rem', fontSize: '1.1rem', fontWeight: '600' }} />
+
+                <div className="grid grid-2" style={{ gap: '1.5rem' }}>
+                  <div className="input-group">
+                    <label>Extra Trip Charges</label>
+                    <input type="number" placeholder="Extra Amt" value={trip.extraCharges} onChange={e => updateTrip(index, 'extraCharges', e.target.value)} style={{ padding: '0.8rem', fontSize: '1.1rem', fontWeight: '600' }} />
                   </div>
-                </div>
-              </div>
-            )}
-            {trip.tripType !== 'Cancelled' && (
-              <div className="grid grid-1" style={{ marginTop: '1rem' }}>
-                <div className="input-group">
-                  <label>Additional Extra Charges & Remarks</label>
-                  <div style={{ display: 'flex', gap: '1rem' }}>
-                     <input type="number" placeholder="Amount" value={trip.extraCharges} onChange={e => updateTrip(index, 'extraCharges', e.target.value)} style={{ maxWidth: '180px', padding: '0.8rem', fontSize: '1.1rem', fontWeight: '600' }} />
-                     <input type="text" placeholder="Detail the reason for extra charges here..." value={trip.remarks} onChange={e => updateTrip(index, 'remarks', e.target.value)} style={{ padding: '0.8rem' }} />
+                  <div className="input-group">
+                    <label>Specific Trip Remarks</label>
+                    <input type="text" placeholder="Reason for extra charges / Trip notes" value={trip.remarks} onChange={e => updateTrip(index, 'remarks', e.target.value)} style={{ padding: '0.8rem' }} />
                   </div>
                 </div>
               </div>
