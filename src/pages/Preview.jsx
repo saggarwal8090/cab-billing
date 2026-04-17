@@ -166,37 +166,41 @@ const Preview = () => {
         {/* Totals Section */}
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '3rem' }}>
           <div style={{ width: '300px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)' }}>
-              <span>Base Subtotal</span>
-              <span style={{ fontWeight: '600' }}>₹{(record.subtotal || 0).toLocaleString()}</span>
-            </div>
+            {isBill && (
+              <>
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)' }}>
+                  <span>Base Subtotal</span>
+                  <span style={{ fontWeight: '600' }}>₹{(record.subtotal || 0).toLocaleString()}</span>
+                </div>
 
-            {trips.reduce((acc, t) => acc + Number(t.da || 0), 0) > 0 && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)', fontSize: '0.9rem', color: 'var(--text-light)' }}>
-                <span>Total DA Charges</span>
-                <span>₹{trips.reduce((acc, t) => acc + Number(t.da || 0), 0)}</span>
-              </div>
-            )}
-            
-            {(trips.reduce((acc, t) => acc + Number(t.nightCharges || 0) + Number(t.wholeNightCharges || 0), 0)) > 0 && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)', fontSize: '0.9rem', color: 'var(--text-light)' }}>
-                <span>Night Halt Charges</span>
-                <span>₹{trips.reduce((acc, t) => acc + Number(t.nightCharges || 0) + Number(t.wholeNightCharges || 0), 0)}</span>
-              </div>
-            )}
+                {trips.reduce((acc, t) => acc + Number(t.da || 0), 0) > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)', fontSize: '0.9rem', color: 'var(--text-light)' }}>
+                    <span>Total DA Charges</span>
+                    <span>₹{trips.reduce((acc, t) => acc + Number(t.da || 0), 0)}</span>
+                  </div>
+                )}
+                
+                {(trips.reduce((acc, t) => acc + Number(t.nightCharges || 0) + Number(t.wholeNightCharges || 0), 0)) > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)', fontSize: '0.9rem', color: 'var(--text-light)' }}>
+                    <span>Night Halt Charges</span>
+                    <span>₹{trips.reduce((acc, t) => acc + Number(t.nightCharges || 0) + Number(t.wholeNightCharges || 0), 0)}</span>
+                  </div>
+                )}
 
-            {trips.reduce((acc, t) => acc + Number(t.toll || 0) + Number(t.parking || 0), 0) > 0 && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)', fontSize: '0.9rem', color: 'var(--text-light)' }}>
-                <span>Toll & Parking</span>
-                <span>₹{trips.reduce((acc, t) => acc + Number(t.toll || 0) + Number(t.parking || 0), 0)}</span>
-              </div>
-            )}
+                {trips.reduce((acc, t) => acc + Number(t.toll || 0) + Number(t.parking || 0), 0) > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)', fontSize: '0.9rem', color: 'var(--text-light)' }}>
+                    <span>Toll & Parking</span>
+                    <span>₹{trips.reduce((acc, t) => acc + Number(t.toll || 0) + Number(t.parking || 0), 0)}</span>
+                  </div>
+                )}
 
-            {trips.reduce((acc, t) => acc + Number(t.extraCharges || 0), 0) > 0 && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)', fontSize: '0.9rem', color: 'var(--text-light)' }}>
-                <span>Other Extra Charges</span>
-                <span>₹{trips.reduce((acc, t) => acc + Number(t.extraCharges || 0), 0)}</span>
-              </div>
+                {trips.reduce((acc, t) => acc + Number(t.extraCharges || 0), 0) > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid var(--border)', fontSize: '0.9rem', color: 'var(--text-light)' }}>
+                    <span>Other Extra Charges</span>
+                    <span>₹{trips.reduce((acc, t) => acc + Number(t.extraCharges || 0), 0)}</span>
+                  </div>
+                )}
+              </>
             )}
 
             <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem 0', fontSize: '1.25rem', fontWeight: '800', color: 'var(--primary)' }}>
