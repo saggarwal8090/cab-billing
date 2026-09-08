@@ -221,13 +221,39 @@ td {
 /* Print Styles */
 @media print {
   @page {
-    size: A4;
-    margin: 10mm;
+    size: A4 portrait;
+    margin: 5mm;
+  }
+  html, body {
+    width: 100% !important;
+    background: white !important;
+    color: #000000 !important;
+    font-size: 10pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
   .no-print { display: none !important; }
-  body { background: white !important; color: black !important; font-size: 11pt; }
-  .container { padding: 0 !important; max-width: 100% !important; margin: 0 !important; }
+  .container { padding: 0 !important; max-width: 100% !important; margin: 0 !important; width: 100% !important; }
   .card { box-shadow: none !important; border: none !important; padding: 0 !important; }
   header { display: none !important; }
-  #printable-area { border: none !important; box-shadow: none !important; padding: 0 !important; }
+  #printable-area { 
+    border: none !important; 
+    box-shadow: none !important; 
+    padding: 0 !important; 
+    max-width: 100% !important; 
+    width: 100% !important;
+    page-break-inside: avoid !important;
+  }
+  table {
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: auto !important;
+    font-size: 8.5pt !important;
+  }
+  th, td {
+    padding: 3px 2px !important;
+    word-break: break-word !important;
+  }
 }
